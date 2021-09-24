@@ -37,24 +37,25 @@ class Products with ChangeNotifier {
     ),
   ];
 
-  var showFavOnly = false;
+  // var showFavOnly = false;
 
   List<Product> get items {
-    if (showFavOnly) {
-      return _items.where((element) => element.isFav).toList();
-    }
     return [..._items];
   }
 
-  void ShowFav() {
-    showFavOnly = true;
-    notifyListeners();
+  List<Product> get favItems {
+    return items.where((element) => element.isFav).toList();
   }
 
-  void ShowAll() {
-    showFavOnly = false;
-    notifyListeners();
-  }
+  // void ShowFav() {
+  //   showFavOnly = true;
+  //   notifyListeners();
+  // }
+
+  // void ShowAll() {
+  //   showFavOnly = false;
+  //   notifyListeners();
+  // }
 
   void addProduct() {
     // _items.add(value);

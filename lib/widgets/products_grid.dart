@@ -5,10 +5,14 @@ import 'package:provider/provider.dart';
 import 'package:flutter_complete_guide/widgets/product_item.dart';
 
 class ProductsGrid extends StatelessWidget {
+  final bool showFavOnly;
+
+  ProductsGrid(this.showFavOnly);
+
   @override
   Widget build(BuildContext context) {
     final Productsdata = Provider.of<Products>(context);
-    final products = Productsdata.items;
+    final products = showFavOnly ? Productsdata.favItems : Productsdata.items;
     return GridView.builder(
         padding: const EdgeInsets.all(10),
         itemCount: products.length,
