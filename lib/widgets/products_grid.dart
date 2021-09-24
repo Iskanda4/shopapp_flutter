@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/models/product.dart';
+import 'package:flutter_complete_guide/providers/product.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_complete_guide/widgets/product_item.dart';
@@ -18,8 +18,13 @@ class ProductsGrid extends StatelessWidget {
             crossAxisSpacing: 10,
             mainAxisSpacing: 10),
         itemBuilder: (context, index) {
-          return ProductItem(products[index].id, products[index].title,
-              products[index].imageUrl);
+          return ChangeNotifierProvider.value(
+            value: products[index],
+            child: ProductItem(
+                // products[index].id, products[index].title,
+                //   products[index].imageUrl
+                ),
+          );
         });
   }
 }

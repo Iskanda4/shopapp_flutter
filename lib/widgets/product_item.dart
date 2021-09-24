@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/providers/product.dart';
 import 'package:flutter_complete_guide/screens/products_details.dart';
+import 'package:provider/provider.dart';
 
 class ProductItem extends StatelessWidget {
-  final String id;
-  final String title;
-  final String imageUrl;
+  // final String id;
+  // final String title;
+  // final String imageUrl;
 
-  ProductItem(this.id, this.title, this.imageUrl);
+  // ProductItem(this.id, this.title, this.imageUrl);
 
   @override
   Widget build(BuildContext context) {
+    final data = Provider.of<Product>(context);
     return GestureDetector(
       onTap: () {
         return Navigator.of(context)
-            .pushNamed(ProductDetails.routeName, arguments: id);
+            .pushNamed(ProductDetails.routeName, arguments: data.id);
       },
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
@@ -24,7 +27,7 @@ class ProductItem extends StatelessWidget {
             child: Column(
               children: [
                 Image.network(
-                  imageUrl,
+                  data.imageUrl,
                   fit: BoxFit.cover,
                   height: 150,
                   width: double.infinity,
@@ -33,7 +36,7 @@ class ProductItem extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   padding: EdgeInsets.all(15),
                   child: Text(
-                    title,
+                    data.title,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
                 ),
@@ -41,8 +44,14 @@ class ProductItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.favorite_outline),
+                        onPressed: () {
+                          data.setFav();
+                        },
+                        splashColor: Colors.blue,
+                        splashRadius: 25,
+                        icon: Icon(data.isFav
+                            ? Icons.favorite
+                            : Icons.favorite_outline),
                         color: Colors.lightBlueAccent),
                     IconButton(
                         onPressed: () {},
