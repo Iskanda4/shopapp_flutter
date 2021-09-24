@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/providers/cart.dart';
 import 'package:flutter_complete_guide/providers/product.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
 import 'package:flutter_complete_guide/widgets/product_item.dart';
@@ -49,6 +50,15 @@ class _ProductsOverviewState extends State<ProductsOverview> {
                 PopupMenuItem(
                     child: Text('Show All'), value: FilterOptions.All),
               ],
+            ),
+            Consumer<Cart>(
+              builder: (_, cart, _1) => Stack(children: [
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.shopping_cart),
+                ),
+                Text(cart.itemCount.toString()),
+              ]),
             ),
           ],
         ),
