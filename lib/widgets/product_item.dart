@@ -4,12 +4,6 @@ import 'package:flutter_complete_guide/screens/products_details.dart';
 import 'package:provider/provider.dart';
 
 class ProductItem extends StatelessWidget {
-  // final String id;
-  // final String title;
-  // final String imageUrl;
-
-  // ProductItem(this.id, this.title, this.imageUrl);
-
   @override
   Widget build(BuildContext context) {
     final data = Provider.of<Product>(context);
