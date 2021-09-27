@@ -31,9 +31,17 @@ class ProductItem extends StatelessWidget {
                 Container(
                   alignment: Alignment.centerLeft,
                   padding: EdgeInsets.all(15),
-                  child: Text(
-                    data.title,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        data.title,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 14),
+                      ),
+                      Text('\$' + data.price.toString(),
+                          style: TextStyle(color: Colors.black54)),
+                    ],
                   ),
                 ),
                 Row(

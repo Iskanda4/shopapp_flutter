@@ -33,31 +33,62 @@ class Cart with ChangeNotifier {
   }
 
   void addItem(String productId, double price, String title) {
-    if (_items.containsKey(productId)) {
+    // if (_items.containsKey(productId)) {
+    //   _items.update(
+    //       productId,
+    //       (value) => CartItem(
+    //           id: value.id,
+    //           title: value.title,
+    //           price: value.price,
+    //           quantity: value.quantity + 1));
+    // } else {
+    _items.putIfAbsent(productId,
+        () => CartItem(id: productId, title: title, price: price, quantity: 1));
+    // }
+    notifyListeners();
+  }
+
+  void addQuantity(String productId) {
+    _items.update(
+        productId,
+        (value) => CartItem(
+            id: value.id,
+            title: value.title,
+            price: value.price,
+            quantity: value.quantity + 1));
+    notifyListeners();
+  }
+
+  void removeQuantity(String productId, int quantity) {
+    if (quantity > 1) {
       _items.update(
           productId,
           (value) => CartItem(
               id: value.id,
               title: value.title,
               price: value.price,
-              quantity: value.quantity + 1));
+              quantity: value.quantity - 1));
     } else {
-      _items.putIfAbsent(
-          productId,
-          () => CartItem(
-              id: DateTime.now().toString(),
-              title: title,
-              price: price,
-              quantity: 1));
+      _items.remove(productId);
     }
     notifyListeners();
   }
 
-  double get totalAmount {
+  String get totalAmount {
     var total = 0.0;
     _items.forEach((key, item) {
       total += item.price * item.quantity;
     });
-    return total;
+    return total.toStringAsFixed(2);
+  }
+
+  void removeItem(String productId) {
+    _items.remove(productId);
+    notifyListeners();
+  }
+
+  void clearCart() {
+    _items = {};
+    notifyListeners();
   }
 }
