@@ -7,8 +7,8 @@ import 'package:provider/provider.dart';
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final data = Provider.of<Product>(context, listen: false);
-    final cart = Provider.of<Cart>(context, listen: false);
+    final data = Provider.of<Product>(context);
+    final cart = Provider.of<Cart>(context);
     return GestureDetector(
       onTap: () {
         return Navigator.of(context)
@@ -53,7 +53,9 @@ class ProductItem extends StatelessWidget {
                         onPressed: () {
                           cart.addItem(data.id, data.price, data.title);
                         },
-                        icon: Icon(Icons.shopping_bag_outlined),
+                        icon: Icon(cart.isItemAdded(data.id)
+                            ? Icons.shopping_bag
+                            : Icons.shopping_bag_outlined),
                         color: Colors.lightBlueAccent)
                   ],
                 )
