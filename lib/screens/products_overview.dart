@@ -3,6 +3,7 @@ import 'package:flutter_complete_guide/providers/cart.dart';
 import 'package:flutter_complete_guide/providers/product.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
 import 'package:flutter_complete_guide/screens/cart_screen.dart';
+import 'package:flutter_complete_guide/screens/orders_screen.dart';
 import 'package:flutter_complete_guide/widgets/product_item.dart';
 import 'package:flutter_complete_guide/widgets/products_grid.dart';
 import 'package:provider/provider.dart';
@@ -23,13 +24,20 @@ class ProductsOverview extends StatefulWidget {
 
 class _ProductsOverviewState extends State<ProductsOverview> {
   bool ShowFavOnly = false;
+  int selectedPage = 0;
+
+  void handlePage(int index) {
+    setState(() {
+      selectedPage = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     // final productsController = Provider.of<Products>(context, listen: false);
     return Scaffold(
-        appBar: AppBar(
-          title: Text('My Shop'),
+      appBar: AppBar(
+          title: selectedPage == 0 ? Text('My Shop') : Text('Orders'),
           actions: [
             PopupMenuButton(
               onSelected: (FilterOptions value) {
@@ -63,8 +71,16 @@ class _ProductsOverviewState extends State<ProductsOverview> {
                 Text(cart.itemCount.toString()),
               ]),
             ),
-          ],
-        ),
-        body: ProductsGrid(ShowFavOnly));
+          ]),
+      body: selectedPage == 0 ? ProductsGrid(ShowFavOnly) : OrderScreen(),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(label: 'Shop', icon: Icon(Icons.shop)),
+          BottomNavigationBarItem(label: 'Orders', icon: Icon(Icons.list))
+        ],
+        currentIndex: selectedPage,
+        onTap: handlePage,
+      ),
+    );
   }
 }
