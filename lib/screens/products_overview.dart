@@ -4,6 +4,7 @@ import 'package:flutter_complete_guide/providers/product.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
 import 'package:flutter_complete_guide/screens/cart_screen.dart';
 import 'package:flutter_complete_guide/screens/orders_screen.dart';
+import 'package:flutter_complete_guide/screens/user_products.dart';
 import 'package:flutter_complete_guide/widgets/product_item.dart';
 import 'package:flutter_complete_guide/widgets/products_grid.dart';
 import 'package:provider/provider.dart';
@@ -36,9 +37,9 @@ class _ProductsOverviewState extends State<ProductsOverview> {
   Widget build(BuildContext context) {
     // final productsController = Provider.of<Products>(context, listen: false);
     return Scaffold(
-      appBar: AppBar(
-          title: selectedPage == 0 ? Text('My Shop') : Text('Orders'),
-          actions: [
+      appBar: (() {
+        if (selectedPage == 0)
+          return AppBar(title: Text('My Shop'), actions: [
             PopupMenuButton(
               onSelected: (FilterOptions value) {
                 setState(() {
@@ -73,12 +74,27 @@ class _ProductsOverviewState extends State<ProductsOverview> {
                 ),
               ]),
             ),
-          ]),
-      body: selectedPage == 0 ? ProductsGrid(ShowFavOnly) : OrderScreen(),
+          ]);
+      }()),
+      body: (() {
+        switch (selectedPage) {
+          case 0:
+            return ProductsGrid(ShowFavOnly);
+            break;
+          case 1:
+            return OrderScreen();
+            break;
+          case 2:
+            return UserProductsScreen();
+            break;
+        }
+      }()),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(label: 'Shop', icon: Icon(Icons.shop)),
-          BottomNavigationBarItem(label: 'Orders', icon: Icon(Icons.list))
+          BottomNavigationBarItem(label: 'Orders', icon: Icon(Icons.list)),
+          BottomNavigationBarItem(
+              label: 'Your Products', icon: Icon(Icons.edit)),
         ],
         currentIndex: selectedPage,
         onTap: handlePage,
