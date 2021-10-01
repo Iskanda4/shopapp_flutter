@@ -60,6 +60,16 @@ class ProductItem extends StatelessWidget {
                     IconButton(
                         onPressed: () {
                           cart.addItem(data.id, data.price, data.title);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Added item to cart!'),
+                            duration: Duration(seconds: 2),
+                            action: SnackBarAction(
+                              label: 'Undo Item Added',
+                              onPressed: () {
+                                cart.RemoveSingleItem(data.id);
+                              },
+                            ),
+                          ));
                         },
                         icon: Icon(cart.isItemAdded(data.id)
                             ? Icons.shopping_bag

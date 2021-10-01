@@ -24,6 +24,30 @@ class CartScreen extends StatelessWidget {
             padding: EdgeInsets.all(15),
             itemBuilder: (ctx, index) {
               return Dismissible(
+                confirmDismiss: (direction) {
+                  return showDialog(
+                      context: context,
+                      builder: (ctx) {
+                        return AlertDialog(
+                          title: Text('Remove Item'),
+                          content: Text(
+                              'Are you sure you want to remove this item from the cart?'),
+                          actions: [
+                            FlatButton(
+                                child: Text('No'),
+                                onPressed: () {
+                                  Navigator.of(ctx).pop(false);
+                                }),
+                            FlatButton(
+                              child: Text('Yes'),
+                              onPressed: () {
+                                Navigator.of(ctx).pop(true);
+                              },
+                            ),
+                          ],
+                        );
+                      });
+                },
                 key: ValueKey(item[index].id),
                 background: Container(
                     color: Colors.red,

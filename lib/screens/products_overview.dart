@@ -68,7 +68,9 @@ class _ProductsOverviewState extends State<ProductsOverview> {
                   },
                   icon: Icon(Icons.shopping_cart),
                 ),
-                Text(cart.itemCount.toString()),
+                Text(
+                  cart.itemCount.toString(),
+                ),
               ]),
             ),
           ]),
