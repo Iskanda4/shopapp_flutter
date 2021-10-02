@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/providers/product.dart';
+import 'package:flutter_complete_guide/providers/products.dart';
+import 'package:provider/provider.dart';
 
 class EditScreen extends StatefulWidget {
   static const routeName = '/edititem';
@@ -13,7 +15,6 @@ class _EditScreenState extends State<EditScreen> {
   final form = GlobalKey<FormState>();
   var editedProduct =
       Product(id: null, title: '', price: 0, description: '', imageUrl: '');
-
   @override
   void dispose() {
     imageUrlController.dispose();
@@ -26,13 +27,31 @@ class _EditScreenState extends State<EditScreen> {
       return;
     }
     form.currentState.save();
+    Provider.of<Products>(context, listen: false).addProduct(editedProduct);
+    Navigator.of(context).pop();
+  }
+
+  void saveEdits(String id, Product newProduct) {
+    final isValid = form.currentState.validate();
+    if (!isValid) {
+      return;
+    }
+    form.currentState.save();
+    Provider.of<Products>(context, listen: false).updateProduct(id, newProduct);
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
+    final productId = ModalRoute.of(context).settings.arguments;
+    if (productId != null) {
+      final product = Provider.of<Products>(context).findById(productId);
+      editedProduct = product;
+      imageUrlController.text = product.imageUrl;
+    }
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Product'),
+        title: Text(productId != null ? 'Edit Product Info' : 'Add Product'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -42,9 +61,10 @@ class _EditScreenState extends State<EditScreen> {
               child: Column(
                 children: [
                   TextFormField(
+                    initialValue: editedProduct.title,
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Please fill following Field';
+                        return 'Please fill the field';
                       }
                       return null;
                     },
@@ -62,6 +82,19 @@ class _EditScreenState extends State<EditScreen> {
                     },
                   ),
                   TextFormField(
+                    initialValue: editedProduct.price > 0
+                        ? editedProduct.price.toString()
+                        : '',
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please fill the field';
+                      } else if (double.tryParse(value) == null) {
+                        return 'Please enter a valid number';
+                      } else if (double.parse(value) <= 0) {
+                        return 'Please enter a number greater than zero';
+                      }
+                      return null;
+                    },
                     decoration: InputDecoration(
                       labelText: 'Product Price',
                     ),
@@ -77,6 +110,15 @@ class _EditScreenState extends State<EditScreen> {
                     },
                   ),
                   TextFormField(
+                    initialValue: editedProduct.description,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please fill the field';
+                      } else if (value.length < 10) {
+                        return 'Description should be at least 10 characters long';
+                      }
+                      return null;
+                    },
                     decoration: InputDecoration(
                       labelText: 'Description',
                     ),
@@ -113,6 +155,12 @@ class _EditScreenState extends State<EditScreen> {
                       ),
                       Expanded(
                         child: TextFormField(
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Enter an Image Url!';
+                            }
+                            return null;
+                          },
                           decoration: InputDecoration(labelText: 'Image URL'),
                           keyboardType: TextInputType.url,
                           textInputAction: TextInputAction.done,
@@ -139,7 +187,9 @@ class _EditScreenState extends State<EditScreen> {
                       margin: EdgeInsets.all(10),
                       alignment: Alignment.centerRight,
                       child: ElevatedButton(
-                        onPressed: saveForm,
+                        onPressed: productId != null
+                            ? () => saveEdits(productId, editedProduct)
+                            : saveForm,
                         child: Text('Add Item'),
                       ))
                 ],
