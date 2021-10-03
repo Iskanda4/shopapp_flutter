@@ -26,11 +26,26 @@ class ProductsOverview extends StatefulWidget {
 class _ProductsOverviewState extends State<ProductsOverview> {
   bool ShowFavOnly = false;
   int selectedPage = 0;
-
+  bool isLoading = false;
   void handlePage(int index) {
     setState(() {
       selectedPage = index;
     });
+  }
+
+  @override
+  void initState() {
+    setState(() {
+      isLoading = true;
+    });
+    Provider.of<Products>(context, listen: false)
+        .fetchAndSetProducts()
+        .then((_) {
+      setState(() {
+        isLoading = false;
+      });
+    });
+    super.initState();
   }
 
   @override
@@ -76,19 +91,23 @@ class _ProductsOverviewState extends State<ProductsOverview> {
             ),
           ]);
       }()),
-      body: (() {
-        switch (selectedPage) {
-          case 0:
-            return ProductsGrid(ShowFavOnly);
-            break;
-          case 1:
-            return OrderScreen();
-            break;
-          case 2:
-            return UserProductsScreen();
-            break;
-        }
-      }()),
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : (() {
+              switch (selectedPage) {
+                case 0:
+                  return ProductsGrid(ShowFavOnly);
+                  break;
+                case 1:
+                  return OrderScreen();
+                  break;
+                case 2:
+                  return UserProductsScreen();
+                  break;
+              }
+            }()),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(label: 'Shop', icon: Icon(Icons.shop)),

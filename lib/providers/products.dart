@@ -59,19 +59,41 @@ class Products with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  Future<void> addProduct(Product product) {
+  Future<void> fetchAndSetProducts() async {
     final url = Uri.parse(
-        'https://fluttershopapp-f1618-default-rtdb.europe-west1.firebasedatabase.app/products');
-    return http
-        .post(url,
-            body: json.encode({
-              'title': product.title,
-              'description': product.description,
-              'price': product.price,
-              'imageUrl': product.imageUrl,
-              'isFav': product.isFav
-            }))
-        .then((response) {
+        'https://fluttershopapp-f1618-default-rtdb.europe-west1.firebasedatabase.app/products.json');
+    try {
+      final response = await http.get(url);
+      final fetchedData = json.decode(response.body) as Map<String, dynamic>;
+      final loadedProducts = [];
+      fetchedData.forEach((prodId, prodData) {
+        _items.add(Product(
+            id: prodId,
+            title: prodData['title'],
+            description: prodData['description'],
+            price: prodData['price'],
+            imageUrl: prodData['imageUrl'],
+            isFav: prodData['isFav']));
+      });
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> addProduct(Product product) async {
+    final url = Uri.parse(
+        'https://fluttershopapp-f1618-default-rtdb.europe-west1.firebasedatabase.app/products.json');
+    try {
+      final response = await http.post(url,
+          body: json.encode({
+            'title': product.title,
+            'description': product.description,
+            'price': product.price,
+            'imageUrl': product.imageUrl,
+            'isFav': product.isFav
+          }));
+
       final newProduct = Product(
           id: json.decode(response.body)['name'],
           title: product.title,
@@ -80,11 +102,33 @@ class Products with ChangeNotifier {
           imageUrl: product.imageUrl);
       _items.add(newProduct);
       notifyListeners();
-    }).catchError((error) {
-      print(error);
+    } catch (error) {
       throw error;
-    });
+    }
   }
+  // This is another way to do the same thing as above
+  // http
+  //     .post(url,
+  //         body: json.encode({
+  //           'title': product.title,
+  //           'description': product.description,
+  //           'price': product.price,
+  //           'imageUrl': product.imageUrl,
+  //           'isFav': product.isFav
+  //         }))
+  //     .then((response) {
+  //   final newProduct = Product(
+  //       id: json.decode(response.body)['name'],
+  //       title: product.title,
+  //       description: product.description,
+  //       price: product.price,
+  //       imageUrl: product.imageUrl);
+  //   _items.add(newProduct);
+  //   notifyListeners();
+  // }).catchError((error) {
+  //   print(error);
+  //   throw error;
+  // });
 
   void updateProduct(String id, Product newProduct) {
     int index = _items.indexWhere((element) => element.id == id);
