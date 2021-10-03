@@ -31,13 +31,14 @@ class _EditScreenState extends State<EditScreen> {
     Navigator.of(context).pop();
   }
 
-  void saveEdits(String id, Product newProduct) {
+  void saveEdits(String id) {
     final isValid = form.currentState.validate();
     if (!isValid) {
       return;
     }
     form.currentState.save();
-    Provider.of<Products>(context, listen: false).updateProduct(id, newProduct);
+    Provider.of<Products>(context, listen: false)
+        .updateProduct(id, editedProduct);
     Navigator.of(context).pop();
   }
 
@@ -78,7 +79,8 @@ class _EditScreenState extends State<EditScreen> {
                           title: value,
                           description: editedProduct.description,
                           price: editedProduct.price,
-                          imageUrl: editedProduct.imageUrl);
+                          imageUrl: editedProduct.imageUrl,
+                          isFav: editedProduct.isFav);
                     },
                   ),
                   TextFormField(
@@ -106,7 +108,8 @@ class _EditScreenState extends State<EditScreen> {
                           title: editedProduct.title,
                           description: editedProduct.description,
                           price: double.parse(value),
-                          imageUrl: editedProduct.imageUrl);
+                          imageUrl: editedProduct.imageUrl,
+                          isFav: editedProduct.isFav);
                     },
                   ),
                   TextFormField(
@@ -131,7 +134,8 @@ class _EditScreenState extends State<EditScreen> {
                           title: editedProduct.title,
                           description: value,
                           price: editedProduct.price,
-                          imageUrl: editedProduct.imageUrl);
+                          imageUrl: editedProduct.imageUrl,
+                          isFav: editedProduct.isFav);
                     },
                   ),
                   Row(
@@ -177,7 +181,8 @@ class _EditScreenState extends State<EditScreen> {
                                 title: editedProduct.title,
                                 description: editedProduct.description,
                                 price: editedProduct.price,
-                                imageUrl: value);
+                                imageUrl: value,
+                                isFav: editedProduct.isFav);
                           },
                         ),
                       ),
@@ -188,9 +193,10 @@ class _EditScreenState extends State<EditScreen> {
                       alignment: Alignment.centerRight,
                       child: ElevatedButton(
                         onPressed: productId != null
-                            ? () => saveEdits(productId, editedProduct)
+                            ? () => saveEdits(productId)
                             : saveForm,
-                        child: Text('Add Item'),
+                        child: Text(
+                            productId != null ? 'Save Changes' : 'Add Item'),
                       ))
                 ],
               ),
