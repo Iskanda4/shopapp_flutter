@@ -59,13 +59,13 @@ class _EditScreenState extends State<EditScreen> {
     });
   }
 
-  void saveEdits(String id) {
+  void saveEdits(String id) async {
     final isValid = form.currentState.validate();
     if (!isValid) {
       return;
     }
     form.currentState.save();
-    Provider.of<Products>(context, listen: false)
+    await Provider.of<Products>(context, listen: false)
         .updateProduct(id, editedProduct);
     Navigator.of(context).pop();
   }

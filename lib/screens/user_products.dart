@@ -5,6 +5,10 @@ import 'package:flutter_complete_guide/widgets/user_product_item.dart';
 import 'package:provider/provider.dart';
 
 class UserProductsScreen extends StatelessWidget {
+  Future<void> refreshProducts(BuildContext context) async {
+    await Provider.of<Products>(context, listen: false).fetchAndSetProducts();
+  }
+
   @override
   Widget build(BuildContext context) {
     final productData = Provider.of<Products>(context);
@@ -21,15 +25,18 @@ class UserProductsScreen extends StatelessWidget {
           )
         ],
       ),
-      body: Padding(
-          padding: EdgeInsets.all(8),
-          child: ListView.builder(
-            itemBuilder: (ctx, index) {
-              return UserProductItem(products[index].id, products[index].title,
-                  products[index].imageUrl);
-            },
-            itemCount: products.length,
-          )),
+      body: RefreshIndicator(
+        onRefresh: () => refreshProducts(context),
+        child: Padding(
+            padding: EdgeInsets.all(8),
+            child: ListView.builder(
+              itemBuilder: (ctx, index) {
+                return UserProductItem(products[index].id,
+                    products[index].title, products[index].imageUrl);
+              },
+              itemCount: products.length,
+            )),
+      ),
     );
   }
 }

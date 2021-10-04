@@ -119,18 +119,7 @@ class CartScreen extends StatelessWidget {
                     'Total: \$' + cart.totalAmount,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  InputChip(
-                      label: Text(
-                        'Proceed to Checkout',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: () {
-                        Provider.of<Orders>(context, listen: false).addOrder(
-                            cart.items.values.toList(), cart.totalAmount);
-                        cart.clearCart();
-                      },
-                      backgroundColor: Colors.blue,
-                      elevation: 5)
+                  CheckoutButton(cart: cart)
                 ],
               ),
             ),
@@ -138,5 +127,47 @@ class CartScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class CheckoutButton extends StatefulWidget {
+  const CheckoutButton({
+    Key key,
+    @required this.cart,
+  }) : super(key: key);
+
+  final Cart cart;
+
+  @override
+  State<CheckoutButton> createState() => _CheckoutButtonState();
+}
+
+class _CheckoutButtonState extends State<CheckoutButton> {
+  bool isLoading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return InputChip(
+        label: isLoading
+            ? CircularProgressIndicator()
+            : Text(
+                'Proceed to Checkout',
+                style: TextStyle(color: Colors.white),
+              ),
+        onPressed: (widget.cart.itemCount <= 0 || isLoading)
+            ? null
+            : () async {
+                setState(() {
+                  isLoading = true;
+                });
+                await Provider.of<Orders>(context, listen: false).addOrder(
+                    widget.cart.items.values.toList(), widget.cart.totalAmount);
+                setState(() {
+                  isLoading = false;
+                });
+                widget.cart.clearCart();
+              },
+        backgroundColor: Colors.blue,
+        elevation: 5);
   }
 }

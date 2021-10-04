@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Product with ChangeNotifier {
   final String id;
@@ -16,8 +18,29 @@ class Product with ChangeNotifier {
       @required this.imageUrl,
       this.isFav = false});
 
-  void setFav() {
+  Future<void> setFav() async {
+    final url = Uri.parse(
+        'https://fluttershopapp-f1618-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json');
+    final oldstatus = this.isFav;
     this.isFav = !this.isFav;
     notifyListeners();
+    try {
+      final response = await http.patch(url,
+          body: json.encode({
+            'title': title,
+            'description': description,
+            'price': price,
+            'imageUrl': imageUrl,
+            'isFav': !isFav
+          }));
+      if (response.statusCode >= 400) {
+        this.isFav = oldstatus;
+        notifyListeners();
+      }
+    } catch (error) {
+      this.isFav = oldstatus;
+      notifyListeners();
+      throw error;
+    }
   }
 }
