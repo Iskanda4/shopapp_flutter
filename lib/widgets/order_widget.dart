@@ -24,7 +24,7 @@ class _OrderWidgetState extends State<OrderWidget> {
         child: Column(
           children: [
             ListTile(
-              title: Text('Order Id#' + widget.order.id),
+              title: Text('Order Id' + widget.order.id),
               subtitle: Text(
                 DateFormat.yMMMd().format(widget.order.dateTime),
               ),

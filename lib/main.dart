@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/orders.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
+import 'package:flutter_complete_guide/screens/auth_screen.dart';
 import 'package:flutter_complete_guide/screens/cart_screen.dart';
 import 'package:flutter_complete_guide/screens/edit_screen.dart';
 import 'package:flutter_complete_guide/screens/products_details.dart';
@@ -18,14 +20,15 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (ctx) => Products()),
         ChangeNotifierProvider(create: (ctx) => Cart()),
+        ChangeNotifierProvider(create: (ctx) => Orders()),
         ChangeNotifierProvider(
             create: (ctx) =>
-                Orders()) // Adding 3 providers which can be accessed throughout the whole app
+                Auth()) // Adding 3 providers which can be accessed throughout the whole app
       ],
       child: MaterialApp(
         title: 'MyShop',
         theme: ThemeData(primarySwatch: Colors.blue),
-        home: ProductsOverview(),
+        home: AuthScreen(),
         routes: {
           ProductDetails.routeName: (ctx) => ProductDetails(),
           CartScreen.routeName: (ctx) => CartScreen(),
