@@ -8,7 +8,7 @@ class Product with ChangeNotifier {
   final String description;
   final double price;
   final String imageUrl;
-  bool isFav;
+  bool isFav = false;
 
   Product(
       {@required this.id,
@@ -18,9 +18,9 @@ class Product with ChangeNotifier {
       @required this.imageUrl,
       this.isFav = false});
 
-  Future<void> setFav() async {
+  Future<void> setFav(String token) async {
     final url = Uri.parse(
-        'https://fluttershopapp-f1618-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json');
+        'https://fluttershopapp-f1618-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json?auth=$token');
     final oldstatus = this.isFav;
     this.isFav = !this.isFav;
     notifyListeners();
@@ -31,7 +31,7 @@ class Product with ChangeNotifier {
             'description': description,
             'price': price,
             'imageUrl': imageUrl,
-            'isFav': !isFav
+            'isFav': isFav
           }));
       if (response.statusCode >= 400) {
         this.isFav = oldstatus;

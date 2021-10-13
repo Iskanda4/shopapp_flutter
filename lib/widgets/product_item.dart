@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/cart.dart';
 import 'package:flutter_complete_guide/providers/product.dart';
 import 'package:flutter_complete_guide/screens/products_details.dart';
@@ -9,6 +10,7 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final data = Provider.of<Product>(context);
     final cart = Provider.of<Cart>(context);
+    final auth = Provider.of<Auth>(context);
     return GestureDetector(
       onTap: () {
         return Navigator.of(context)
@@ -49,7 +51,7 @@ class ProductItem extends StatelessWidget {
                   children: [
                     IconButton(
                         onPressed: () {
-                          data.setFav();
+                          data.setFav(auth.token);
                         },
                         splashColor: Colors.blue,
                         splashRadius: 25,

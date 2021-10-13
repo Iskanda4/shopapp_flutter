@@ -57,7 +57,24 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
-  void _submit() {
+  void showErrorDialog(String message) {
+    showDialog(
+        context: context,
+        builder: (ctx) {
+          return AlertDialog(
+            title: Text(message),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Okay'))
+            ],
+          );
+        });
+  }
+
+  void _submit() async {
     if (!_formKey.currentState.validate()) {
       // Invalid!
       return;
@@ -68,14 +85,24 @@ class _AuthCardState extends State<AuthCard> {
     });
     try {
       if (_authMode == AuthMode.Login) {
-        Provider.of<Auth>(context, listen: false)
+        await Provider.of<Auth>(context, listen: false)
             .signin(_authData['email'], _authData['password']);
       } else {
-        Provider.of<Auth>(context, listen: false)
+        await Provider.of<Auth>(context, listen: false)
             .signup(_authData['email'], _authData['password']);
       }
     } on HttpException catch (error) {
-    } catch (error) {}
+      var errorMessage = 'Authentication Failed!';
+      if (error.toString().contains('EMAIL_EXISTS')) {
+        errorMessage = 'Email address already exists!';
+      } else if (error.toString().contains('INVALID_EMAIL')) {
+        errorMessage = 'Email Address entered not Valid!';
+      }
+      showErrorDialog(errorMessage);
+    } catch (error) {
+      var errorMessage = 'Could not complete Request! Try Again Later';
+      showErrorDialog(errorMessage);
+    }
     setState(() {
       _isLoading = false;
     });
@@ -119,7 +146,6 @@ class _AuthCardState extends State<AuthCard> {
                     if (value.isEmpty || !value.contains('@')) {
                       return 'Invalid email!';
                     }
-                    return null;
                     return null;
                   },
                   onSaved: (value) {

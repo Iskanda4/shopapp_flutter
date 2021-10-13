@@ -17,24 +17,29 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (ctx) => Products()),
-        ChangeNotifierProvider(create: (ctx) => Cart()),
-        ChangeNotifierProvider(create: (ctx) => Orders()),
-        ChangeNotifierProvider(
-            create: (ctx) =>
-                Auth()) // Adding 3 providers which can be accessed throughout the whole app
-      ],
-      child: MaterialApp(
-        title: 'MyShop',
-        theme: ThemeData(primarySwatch: Colors.blue),
-        home: AuthScreen(),
-        routes: {
-          ProductDetails.routeName: (ctx) => ProductDetails(),
-          CartScreen.routeName: (ctx) => CartScreen(),
-          EditScreen.routeName: (ctx) => EditScreen(),
-        },
-      ),
-    );
+        providers: [
+          ChangeNotifierProvider(create: (ctx) => Auth()),
+          ChangeNotifierProxyProvider<Auth, Products>(
+            update: (ctx, auth, prevProducts) => Products(
+                auth.token, prevProducts == null ? [] : prevProducts.items),
+          ),
+          ChangeNotifierProvider(create: (ctx) => Cart()),
+          ChangeNotifierProxyProvider<Auth, Orders>(
+              update: (ctx, auth, prevOrders) => Orders(
+                  auth.token, prevOrders == null ? [] : prevOrders.orders)),
+          // Adding providers which can be accessed throughout the whole app
+        ],
+        child: Consumer<Auth>(
+          builder: (ctx, auth, _) => MaterialApp(
+            title: 'MyShop',
+            theme: ThemeData(primarySwatch: Colors.blue),
+            home: auth.isAuth ? ProductsOverview() : AuthScreen(),
+            routes: {
+              ProductDetails.routeName: (ctx) => ProductDetails(),
+              CartScreen.routeName: (ctx) => CartScreen(),
+              EditScreen.routeName: (ctx) => EditScreen(),
+            },
+          ),
+        ));
   }
 }
