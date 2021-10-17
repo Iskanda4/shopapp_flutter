@@ -18,21 +18,14 @@ class Product with ChangeNotifier {
       @required this.imageUrl,
       this.isFav = false});
 
-  Future<void> setFav(String token) async {
+  Future<void> setFav(String token, String userId) async {
     final url = Uri.parse(
-        'https://fluttershopapp-f1618-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json?auth=$token');
+        'https://fluttershopapp-f1618-default-rtdb.europe-west1.firebasedatabase.app/userFav/$userId/$id.json?auth=$token');
     final oldstatus = this.isFav;
     this.isFav = !this.isFav;
     notifyListeners();
     try {
-      final response = await http.patch(url,
-          body: json.encode({
-            'title': title,
-            'description': description,
-            'price': price,
-            'imageUrl': imageUrl,
-            'isFav': isFav
-          }));
+      final response = await http.put(url, body: json.encode(isFav));
       if (response.statusCode >= 400) {
         this.isFav = oldstatus;
         notifyListeners();

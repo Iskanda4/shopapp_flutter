@@ -40,6 +40,8 @@ class Products with ChangeNotifier {
     // ),
   ];
 
+  List<Product> userItems = [];
+
   // var showFavOnly = false;
 
   List<Product> get items {
@@ -61,15 +63,20 @@ class Products with ChangeNotifier {
   // }
 
   final String authToken;
+  final String userId;
 
-  Products(this.authToken, this._items);
+  Products(this.authToken, this._items, this.userId);
 
   Future<void> fetchAndSetProducts() async {
-    final url = Uri.parse(
+    var url = Uri.parse(
         'https://fluttershopapp-f1618-default-rtdb.europe-west1.firebasedatabase.app/products.json?auth=$authToken');
     try {
       final response = await http.get(url);
       final fetchedData = json.decode(response.body) as Map<String, dynamic>;
+      url = Uri.parse(
+          'https://fluttershopapp-f1618-default-rtdb.europe-west1.firebasedatabase.app/userFav/$userId.json?auth=$authToken');
+      final favresponse = await http.get(url);
+      final favData = json.decode(favresponse.body);
       final List<Product> loadedProducts = [];
       fetchedData.forEach((prodId, prodData) {
         loadedProducts.add(Product(
@@ -78,7 +85,7 @@ class Products with ChangeNotifier {
             description: prodData['description'],
             price: prodData['price'],
             imageUrl: prodData['imageUrl'],
-            isFav: prodData['isFav']));
+            isFav: favData == null ? false : favData[prodId] ?? false));
       });
       _items = loadedProducts;
       notifyListeners();
@@ -97,7 +104,7 @@ class Products with ChangeNotifier {
             'description': product.description,
             'price': product.price,
             'imageUrl': product.imageUrl,
-            'isFav': product.isFav
+            'userId': userId
           }));
 
       final newProduct = Product(
@@ -171,5 +178,32 @@ class Products with ChangeNotifier {
 
   Product findById(String id) {
     return _items.firstWhere((element) => element.id == id);
+  }
+
+  Future<void> fetchAndSetUserProducts() async {
+    var url = Uri.parse(
+        'https://fluttershopapp-f1618-default-rtdb.europe-west1.firebasedatabase.app/products.json?auth=$authToken&orderBy="userId"&equalTo="$userId"');
+    try {
+      final response = await http.get(url);
+      final fetchedData = json.decode(response.body) as Map<String, dynamic>;
+      url = Uri.parse(
+          'https://fluttershopapp-f1618-default-rtdb.europe-west1.firebasedatabase.app/userFav/$userId.json?auth=$authToken');
+      final favresponse = await http.get(url);
+      final favData = json.decode(favresponse.body);
+      final List<Product> loadedProducts = [];
+      fetchedData.forEach((prodId, prodData) {
+        loadedProducts.add(Product(
+            id: prodId,
+            title: prodData['title'],
+            description: prodData['description'],
+            price: prodData['price'],
+            imageUrl: prodData['imageUrl'],
+            isFav: favData == null ? false : favData[prodId] ?? false));
+      });
+      userItems = loadedProducts;
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
   }
 }

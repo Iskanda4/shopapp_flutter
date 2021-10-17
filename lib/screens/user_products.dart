@@ -6,13 +6,14 @@ import 'package:provider/provider.dart';
 
 class UserProductsScreen extends StatelessWidget {
   Future<void> refreshProducts(BuildContext context) async {
-    await Provider.of<Products>(context, listen: false).fetchAndSetProducts();
+    await Provider.of<Products>(context, listen: false)
+        .fetchAndSetUserProducts();
   }
 
   @override
   Widget build(BuildContext context) {
-    final productData = Provider.of<Products>(context);
-    final products = productData.items;
+    // final productData = Provider.of<Products>(context);
+    // final products = productData.userItems;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Products'),
@@ -25,17 +26,27 @@ class UserProductsScreen extends StatelessWidget {
           )
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () => refreshProducts(context),
-        child: Padding(
-            padding: EdgeInsets.all(8),
-            child: ListView.builder(
-              itemBuilder: (ctx, index) {
-                return UserProductItem(products[index].id,
-                    products[index].title, products[index].imageUrl);
-              },
-              itemCount: products.length,
-            )),
+      body: FutureBuilder(
+        future: refreshProducts(context),
+        builder: (ctx, snapshot) =>
+            snapshot.connectionState == ConnectionState.waiting
+                ? Center(child: CircularProgressIndicator())
+                : RefreshIndicator(
+                    onRefresh: () => refreshProducts(context),
+                    child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Consumer<Products>(
+                          builder: (ctx, products, _) => ListView.builder(
+                            itemBuilder: (ctx, index) {
+                              return UserProductItem(
+                                  products.userItems[index].id,
+                                  products.userItems[index].title,
+                                  products.userItems[index].imageUrl);
+                            },
+                            itemCount: products.userItems.length,
+                          ),
+                        )),
+                  ),
       ),
     );
   }

@@ -51,7 +51,7 @@ class ProductItem extends StatelessWidget {
                   children: [
                     IconButton(
                         onPressed: () {
-                          data.setFav(auth.token);
+                          data.setFav(auth.token, auth.userId);
                         },
                         splashColor: Colors.blue,
                         splashRadius: 25,

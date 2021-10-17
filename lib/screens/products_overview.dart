@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/providers/auth.dart';
 import 'package:flutter_complete_guide/providers/cart.dart';
 import 'package:flutter_complete_guide/providers/product.dart';
 import 'package:flutter_complete_guide/providers/products.dart';
@@ -88,6 +89,12 @@ class _ProductsOverviewState extends State<ProductsOverview> {
                   cart.itemCount.toString(),
                 ),
               ]),
+            ),
+            IconButton(
+              icon: Icon(Icons.logout),
+              onPressed: () {
+                Provider.of<Auth>(context, listen: false).logout();
+              },
             ),
           ]);
       }()),
