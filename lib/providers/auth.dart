@@ -25,9 +25,7 @@ class Auth with ChangeNotifier {
     return null;
   }
 
-  String get userId {
-    return _userId;
-  }
+  String get userId => _userId;
 
   Future<void> authenticate(
       String email, String password, String urlSegment) async {
@@ -80,21 +78,24 @@ class Auth with ChangeNotifier {
       return false;
     }
     final extractedData =
-        await json.decode(prefs.getString('userData')) as Map<String, Object>;
+        json.decode(prefs.getString('userData')) as Map<String, Object>;
+
     final expiryDate = DateTime.parse(extractedData['expiryDate']);
     if (expiryDate.isAfter(DateTime.now())) {
       _token = extractedData['token'];
+
       _userId = extractedData['userId'];
-      _expiryDate = extractedData['expiryDate'];
+
+      _expiryDate = DateTime.parse(extractedData['expiryDate']);
+
       notifyListeners();
       autoLogout();
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
-  void logout() {
+  void logout() async {
     _userId = null;
     _token = null;
     _expiryDate = null;
@@ -102,6 +103,8 @@ class Auth with ChangeNotifier {
       authTimer.cancel();
     }
     notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('userData');
   }
 
   void autoLogout() {
