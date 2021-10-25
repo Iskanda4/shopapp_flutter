@@ -24,12 +24,24 @@ class ProductItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(7),
             child: Column(
               children: [
-                Image.network(
-                  data.imageUrl,
-                  fit: BoxFit.cover,
-                  height: 150,
-                  width: double.infinity,
+                Hero(
+                  tag: data.id,
+                  child: FadeInImage(
+                      placeholder:
+                          AssetImage('assets/images/product-placeholder.png'),
+                      image: NetworkImage(
+                        data.imageUrl,
+                      ),
+                      fit: BoxFit.cover,
+                      height: 150,
+                      width: double.infinity),
                 ),
+                // Image.network(
+                //   data.imageUrl,
+                //   fit: BoxFit.cover,
+                //   height: 150,
+                //   width: double.infinity,
+                // ),
                 Container(
                   alignment: Alignment.centerLeft,
                   padding: EdgeInsets.all(15),

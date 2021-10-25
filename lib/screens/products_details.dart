@@ -16,7 +16,9 @@ class ProductDetails extends StatelessWidget {
         child: Container(
             child: Column(
           children: [
-            Image.network(product.imageUrl, fit: BoxFit.contain),
+            Hero(
+                tag: product.id,
+                child: Image.network(product.imageUrl, fit: BoxFit.contain)),
             Container(
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(top: 10, left: 10),

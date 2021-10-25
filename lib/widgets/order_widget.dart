@@ -19,36 +19,43 @@ class _OrderWidgetState extends State<OrderWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-        margin: EdgeInsets.all(5),
-        child: Column(
-          children: [
-            ListTile(
-              title: Text('Order Id' + widget.order.id),
-              subtitle: Text(
-                DateFormat.yMMMd().format(widget.order.dateTime),
-              ),
-              trailing: Container(
-                width: 200,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Total Amount: \$' + widget.order.amount.toString()),
-                    IconButton(
-                        onPressed: () {
-                          setState(() {
-                            expanded = !expanded;
-                          });
-                        },
-                        icon: Icon(
-                            expanded ? Icons.expand_less : Icons.expand_more)),
-                  ],
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 300),
+      height:
+          expanded ? min(widget.order.products.length * 20.0 + 200, 220) : 95,
+      child: Card(
+          margin: EdgeInsets.all(5),
+          child: Column(
+            children: [
+              ListTile(
+                title: Text('Order Id' + widget.order.id),
+                subtitle: Text(
+                  DateFormat.yMMMd().format(widget.order.dateTime),
+                ),
+                trailing: Container(
+                  width: 200,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Total Amount: \$' + widget.order.amount.toString()),
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              expanded = !expanded;
+                            });
+                          },
+                          icon: Icon(expanded
+                              ? Icons.expand_less
+                              : Icons.expand_more)),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            if (expanded)
-              Container(
-                height: min(widget.order.products.length * 10.0 + 100, 150),
+              AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                height: expanded
+                    ? min(widget.order.products.length * 10.0 + 100, 150)
+                    : 0,
                 child: ListView.builder(
                     itemBuilder: (ctx, index) => Row(
                           children: [
@@ -82,7 +89,8 @@ class _OrderWidgetState extends State<OrderWidget> {
                         ),
                     itemCount: widget.order.products.length),
               )
-          ],
-        ));
+            ],
+          )),
+    );
   }
 }
