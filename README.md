@@ -1,9 +1,5 @@
 # E-Commerce Flutter App
 
-A new Flutter project.
-
-## Description
-
 An E-Commerce Shop App made using flutter with some features like
 
 - User Creation and Authentication
