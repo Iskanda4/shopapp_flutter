@@ -2,15 +2,23 @@
 
 A new Flutter project.
 
-## Getting Started
+## Description
 
-This project is a starting point for a Flutter application.
+An E-Commerce Shop App made using flutter with some features like
 
-A few resources to get you started if this is your first Flutter project:
+- User Creation and Authentication
+- View and Favorite Products 
+- Add/Edit your Own Products
+- Create an Order
+- View Order History
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+### Screenshots
+<div>
+<img src="https://user-images.githubusercontent.com/24414643/152584525-cc33530b-2f1c-4e30-a4f4-87ec1fb1156b.png" alt="drawing" style="width:300px;"/>
+<img src="https://user-images.githubusercontent.com/24414643/152584899-fc437ef6-18f3-4d03-9663-f1a176bf0340.png" alt="drawing" style="width:300px;"/>
+<img src="https://user-images.githubusercontent.com/24414643/152584925-907ad23d-0ab2-489c-9a12-ea4ee7b2bf11.png" alt="drawing" style="width:300px;"/>
+</div>
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
+
