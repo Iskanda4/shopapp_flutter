@@ -8,7 +8,6 @@ class OrderItem {
   final String amount;
   final List<CartItem> products;
   final DateTime dateTime;
-
   OrderItem(
       {@required this.id,
       @required this.amount,

@@ -62,7 +62,7 @@ class _OrderWidgetState extends State<OrderWidget> {
                             Card(
                               child: Container(
                                 height: 50,
-                                width: 360,
+                                width: MediaQuery.of(context).size.width - 20,
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,

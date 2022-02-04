@@ -11,6 +11,7 @@ class ProductItem extends StatelessWidget {
     final data = Provider.of<Product>(context);
     final cart = Provider.of<Cart>(context);
     final auth = Provider.of<Auth>(context);
+    final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
         return Navigator.of(context)
@@ -58,38 +59,41 @@ class ProductItem extends StatelessWidget {
                     ],
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          data.setFav(auth.token, auth.userId);
-                        },
-                        splashColor: Colors.blue,
-                        splashRadius: 25,
-                        icon: Icon(data.isFav
-                            ? Icons.favorite
-                            : Icons.favorite_outline),
-                        color: Colors.lightBlueAccent),
-                    IconButton(
-                        onPressed: () {
-                          cart.addItem(data.id, data.price, data.title);
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text('Added item to cart!'),
-                            duration: Duration(seconds: 2),
-                            action: SnackBarAction(
-                              label: 'Undo Item Added',
-                              onPressed: () {
-                                cart.RemoveSingleItem(data.id);
-                              },
-                            ),
-                          ));
-                        },
-                        icon: Icon(cart.isItemAdded(data.id)
-                            ? Icons.shopping_bag
-                            : Icons.shopping_bag_outlined),
-                        color: Colors.lightBlueAccent)
-                  ],
+                Container(
+                  padding: EdgeInsets.only(top: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            data.setFav(auth.token, auth.userId);
+                          },
+                          splashColor: Colors.blue,
+                          splashRadius: 25,
+                          icon: Icon(data.isFav
+                              ? Icons.favorite
+                              : Icons.favorite_outline),
+                          color: Colors.lightBlueAccent),
+                      IconButton(
+                          onPressed: () {
+                            cart.addItem(data.id, data.price, data.title);
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text('Added item to cart!'),
+                              duration: Duration(seconds: 2),
+                              action: SnackBarAction(
+                                label: 'Undo Item Added',
+                                onPressed: () {
+                                  cart.RemoveSingleItem(data.id);
+                                },
+                              ),
+                            ));
+                          },
+                          icon: Icon(cart.isItemAdded(data.id)
+                              ? Icons.shopping_bag
+                              : Icons.shopping_bag_outlined),
+                          color: Colors.lightBlueAccent)
+                    ],
+                  ),
                 )
               ],
             ),

@@ -9,7 +9,6 @@ import 'package:flutter_complete_guide/screens/products_details.dart';
 import 'package:flutter_complete_guide/screens/products_overview.dart';
 import 'package:flutter_complete_guide/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
-
 import 'providers/cart.dart';
 
 void main() => runApp(MyApp());
