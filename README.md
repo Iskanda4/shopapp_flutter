@@ -7,6 +7,7 @@ An E-Commerce Shop App made using flutter with some features like
 - Add/Edit your Own Products
 - Create an Order
 - View Order History
+- Backend using Firebase
 
 ### Screenshots
 <div>
@@ -15,10 +16,10 @@ An E-Commerce Shop App made using flutter with some features like
 <img src="https://user-images.githubusercontent.com/24414643/152584925-907ad23d-0ab2-489c-9a12-ea4ee7b2bf11.png" alt="drawing" style="width:200px;"/>
 </div>
 
-
+<!-- 
 ## Inspiration
 
-https://www.udemy.com/course/learn-flutter-dart-to-build-ios-android-apps/
+https://www.udemy.com/course/learn-flutter-dart-to-build-ios-android-apps/ -->
 
 
 
